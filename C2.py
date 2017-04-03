@@ -1,5 +1,7 @@
 from kivy.app import App
 from kivy.uix.label import Label
+from kivy.gesture import Gesture, GestureDatabase
+
 
 class MyApp(App):
     def build(self):
@@ -7,13 +9,16 @@ class MyApp(App):
         return self.label
 
     def detect(self, instance, touch):
-        def on_touch_left(touch):
-            self.label.text = "Slide Left"
-        def on_touch_right(touch):
+        threshold = 0.05
+        if touch.dx > 0 and abs(touch.dy) < threshold:
             self.label.text = "Slide Right"
-        def on_touch_down(touch):
-            self.label.text = "Slide Down"
-        def on_touch_up(touch):
+        elif touch.dx < 0 and abs(touch.dy) < threshold:
+            self.label.text = "Slide Left"
+        elif abs(touch.dx) < threshold and touch.dy > 0:
             self.label.text = "Slide Up"
+        elif abs(touch.dx) < threshold and touch.dy < 0:
+            self.label.text = "Slide Down"
+        # print touch
+
 
 MyApp().run()
